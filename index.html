@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        if ("WebSocket" in window)
+        {
+            alert("您的浏览器支持 WebSocket!");
+
+            // 打开一个 web socket
+            var ws = new WebSocket("ws://localhost:8080");
+
+            ws.onopen = function()
+            {
+                alert("服务器已连接...");
+            };
+        }
+        else
+        {
+            // 浏览器不支持 WebSocket
+            alert("您的浏览器不支持 WebSocket!");
+        }
+        function send()
+        {
+            var text = document.getElementById('message');
+            ws.send(text.value);
+            var dialog = document.getElementById('dialog')
+            var p = document.createElement('p');
+            var node = document.createTextNode('你说: ' + text.value);
+            p.appendChild(node);
+            dialog.appendChild(p);
+        }
+        ws.onmessage = function (evt)
+        {
+            var received_msg = evt.data;
+            var user = JSON.parse(received_msg)
+            alert("新的消息...");
+            var dialog = document.getElementById('dialog')
+            var p = document.createElement('p');
+            var node = document.createTextNode('用户' + user.id + '说 : ' + user.data);
+            p.appendChild(node);
+            dialog.appendChild(p);
+
+        };
+
+        ws.onclose = function()
+        {
+            // 关闭 websocket
+            alert("连接已关闭...");
+        };
+        window.onunload = function() {
+            ws.close();
+        }
+    </script>
+    <style>
+        .main{
+            width: 80%;
+            height: 100%;
+            margin: 0 auto;
+        }
+        .content{
+            width: 600px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        #dialog{
+            width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            border: 1px solid #eee;
+            overflow:auto;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="content">
+        <div id="dialog">
+
+        </div>
+        <form>
+            <textarea rows="8" cols="97" id="message"></textarea>
+        </form>
+        <button onclick="send()">发送</button>
+    </div>
+</div>
+</body>
+</html>
