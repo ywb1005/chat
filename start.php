@@ -9,7 +9,7 @@
 use Workerman\Worker;
 require_once './Autoloader.php';
 
-$worker = new Worker("websocket://0.0.0.0:8080");
+$worker = new Worker("websocket://0.0.0.0:2346");
 
 // 启动4个进程对外提供服务
 $worker->count = 4;
